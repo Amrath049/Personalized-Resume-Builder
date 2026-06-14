@@ -1,0 +1,14 @@
+{
+  "name": "resumetailor-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Optional AI proxy for ResumeTailor (only needed if a provider blocks browser CORS).",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
