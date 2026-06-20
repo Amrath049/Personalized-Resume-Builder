@@ -1,15 +1,73 @@
-// Settings: page size, font scale, AI provider + API key, optional proxy URL.
+// Settings: template picker, section customization, page layout, AI provider.
 
 import { useStore } from './store/store';
 import { Card, Field, TextInput } from './editor/controls';
+import { TEMPLATES } from './data/templates';
+import type { SectionId } from './types';
+
+const SECTION_IDS: SectionId[] = ['summary', 'experience', 'projects', 'skills', 'education', 'courses'];
 
 export function Settings() {
   const settings = useStore((s) => s.settings);
   const setSettings = useStore((s) => s.setSettings);
+  const applyTemplate = useStore((s) => s.applyTemplate);
+  const setSectionConfig = useStore((s) => s.setSectionConfig);
   const resetAll = useStore((s) => s.resetAll);
 
   return (
     <div className="settings">
+      {/* ---- Template picker ---- */}
+      <Card title="Resume template">
+        <p className="muted">Choose the preset that fits your field. You can fine-tune individual sections below.</p>
+        <div className="template-grid">
+          {TEMPLATES.map((t) => (
+            <button
+              key={t.id}
+              className={`template-card${settings.templateId === t.id ? ' template-card--active' : ''}`}
+              onClick={() => applyTemplate(t.id)}
+            >
+              <strong>{t.name}</strong>
+              <span>{t.description}</span>
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {/* ---- Section customization ---- */}
+      <Card title="Sections">
+        <p className="muted">
+          Toggle sections on/off and rename headings to fit your profession. For the portfolio/projects
+          section, the second field sets the subtitle label (e.g. "Tech Stack", "Tools", "Key Results") — leave
+          it blank to hide that line entirely.
+        </p>
+        {SECTION_IDS.map((key) => {
+          const cfg = settings.sectionOverrides[key];
+          return (
+            <div key={key} className="section-row">
+              <input
+                type="checkbox"
+                checked={cfg.enabled}
+                onChange={(e) => setSectionConfig(key, { enabled: e.target.checked })}
+                title={cfg.enabled ? 'Visible in resume' : 'Hidden from resume'}
+              />
+              <TextInput
+                value={cfg.label}
+                onChange={(v) => setSectionConfig(key, { label: v })}
+                placeholder="Section heading"
+              />
+              {key === 'projects' && (
+                <TextInput
+                  value={cfg.sublabel ?? ''}
+                  onChange={(v) => setSectionConfig(key, { sublabel: v })}
+                  placeholder="Subtitle label"
+                />
+              )}
+            </div>
+          );
+        })}
+      </Card>
+
+      {/* ---- Page & layout ---- */}
       <Card title="Page & layout">
         <div className="grid-2">
           <Field label="Page size">
@@ -35,6 +93,7 @@ export function Settings() {
         </div>
       </Card>
 
+      {/* ---- AI provider ---- */}
       <Card title="AI provider (optional)">
         <p className="muted">
           Used only by the JD Assistant's "Generate" button. Get a <strong>free</strong> key, paste it
@@ -81,6 +140,7 @@ export function Settings() {
         </Field>
       </Card>
 
+      {/* ---- Danger zone ---- */}
       <Card title="Danger zone">
         <button
           className="btn danger"

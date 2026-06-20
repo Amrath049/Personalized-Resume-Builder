@@ -37,9 +37,9 @@ export default function App() {
             </button>
           </nav>
           <div className="left-scroll">
-            {tab === 'edit' && <Editor />}
-            {tab === 'jd' && <JdAssistant />}
-            {tab === 'settings' && <Settings />}
+            <div hidden={tab !== 'edit'}><Editor /></div>
+            <div hidden={tab !== 'jd'}><JdAssistant /></div>
+            <div hidden={tab !== 'settings'}><Settings /></div>
           </div>
         </div>
 

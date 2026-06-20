@@ -30,10 +30,10 @@ The 7 sections (structure is constant, content is editable):
 
 | Choice | Why |
 | ------ | --- |
-| **React + Vite + TypeScript** | Your preferred stack; fast dev; deployable as a free static site. |
+| **React + Vite + TypeScript** | Fast dev; deployable as a free static site. |
 | **`@react-pdf/renderer`** | Generates **real-text** PDFs with precise layout + custom filename. The live preview *is* the PDF (WYSIWYG). |
-| **Carlito font (embedded)** | Free, **metric-identical to Calibri**, so the output matches your current resume. |
-| **Zustand + localStorage** | Saves your master + named versions in the browser; export/import as a file. |
+| **Carlito font (embedded)** | Free, **metric-identical to Calibri**, so the output matches a typical Word/Calibri resume. |
+| **Zustand + localStorage** | Saves the master + named versions in the browser; export/import as a JSON file. |
 | **No backend required** | Runs 100% in the browser → free to host. (A tiny optional Node proxy exists only for AI if a provider blocks browser calls.) |
 
 ## 4. Features
@@ -47,7 +47,7 @@ The 7 sections (structure is constant, content is editable):
   - **Copy optimized prompt** to paste into ChatGPT/Claude yourself (free, manual).
   - **Optional in-app AI** via your own free **Gemini** or **Groq** API key — drafts improved
     content you review and apply.
-- ✅ Pre-loaded with your real resume as the master, plus a "Wells Fargo" example version.
+- ✅ Pre-loaded with a sample resume as the master, plus a "TechCorp (example)" tailored version.
 
 ## 5. Architecture
 

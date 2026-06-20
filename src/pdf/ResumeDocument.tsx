@@ -30,6 +30,7 @@ function Bullet({ text, styles }: { text: string; styles: ReturnType<typeof make
 }
 
 function SectionTitle({ children, styles }: { children: string; styles: ReturnType<typeof makeStyles> }) {
+  if (!children?.trim()) return null;
   return <Text style={styles.sectionTitle}>{children.toUpperCase()}</Text>;
 }
 
@@ -37,11 +38,12 @@ export function ResumeDocument({ resume, settings }: Props) {
   const styles = makeStyles(settings);
   const { header } = resume;
   const iconSize = 9 * (settings.fontScale || 1);
+  const sc = settings.sectionOverrides;
 
   return (
     <Document title={header.name} author={header.name}>
       <Page size={settings.pageSize} style={styles.page}>
-        {/* Header */}
+        {/* Header — always shown */}
         <Text style={styles.name}>{header.name}</Text>
         {!!header.title && <Text style={styles.title}>{header.title}</Text>}
 
@@ -90,17 +92,17 @@ export function ResumeDocument({ resume, settings }: Props) {
         </View>
 
         {/* Professional Summary */}
-        {!!resume.summary.trim() && (
+        {sc.summary.enabled && !!resume.summary.trim() && (
           <View style={styles.section}>
-            <SectionTitle styles={styles}>Professional Summary</SectionTitle>
+            <SectionTitle styles={styles}>{sc.summary.label}</SectionTitle>
             <Text style={styles.summary}>{resume.summary}</Text>
           </View>
         )}
 
         {/* Experience */}
-        {resume.experience.length > 0 && (
+        {sc.experience.enabled && resume.experience.length > 0 && (
           <View style={styles.section}>
-            <SectionTitle styles={styles}>Experience</SectionTitle>
+            <SectionTitle styles={styles}>{sc.experience.label}</SectionTitle>
             {resume.experience.map((e, i) => (
               <View key={i} style={styles.entry} wrap={false}>
                 <Text style={styles.entryRole}>{e.role}</Text>
@@ -116,16 +118,16 @@ export function ResumeDocument({ resume, settings }: Props) {
           </View>
         )}
 
-        {/* Projects */}
-        {resume.projects.length > 0 && (
+        {/* Projects / Portfolio / Campaigns */}
+        {sc.projects.enabled && resume.projects.length > 0 && (
           <View style={styles.section}>
-            <SectionTitle styles={styles}>Projects</SectionTitle>
+            <SectionTitle styles={styles}>{sc.projects.label}</SectionTitle>
             {resume.projects.map((p, i) => (
               <View key={i} style={styles.entry}>
                 <Text style={styles.entryRole}>{p.name}</Text>
-                {!!p.techStack && (
+                {!!p.techStack && !!sc.projects.sublabel && (
                   <Text style={styles.entrySub}>
-                    <Text style={{ fontWeight: 'bold' }}>Tech Stack: </Text>
+                    <Text style={{ fontWeight: 'bold' }}>{sc.projects.sublabel}: </Text>
                     {p.techStack}
                   </Text>
                 )}
@@ -138,9 +140,9 @@ export function ResumeDocument({ resume, settings }: Props) {
         )}
 
         {/* Skills */}
-        {resume.skills.length > 0 && (
+        {sc.skills.enabled && resume.skills.length > 0 && (
           <View style={styles.section}>
-            <SectionTitle styles={styles}>Skills</SectionTitle>
+            <SectionTitle styles={styles}>{sc.skills.label}</SectionTitle>
             {resume.skills.map((s, i) =>
               s.label || s.value ? (
                 <Text key={i} style={styles.skillRow}>
@@ -153,9 +155,9 @@ export function ResumeDocument({ resume, settings }: Props) {
         )}
 
         {/* Education */}
-        {resume.education.length > 0 && (
+        {sc.education.enabled && resume.education.length > 0 && (
           <View style={styles.section}>
-            <SectionTitle styles={styles}>Education</SectionTitle>
+            <SectionTitle styles={styles}>{sc.education.label}</SectionTitle>
             {resume.education.map((ed, i) => (
               <View key={i} style={styles.entry}>
                 <Text style={styles.eduDegree}>{ed.degree}</Text>
@@ -167,9 +169,9 @@ export function ResumeDocument({ resume, settings }: Props) {
         )}
 
         {/* Courses & Certificates */}
-        {resume.courses.length > 0 && (
+        {sc.courses.enabled && resume.courses.length > 0 && (
           <View style={styles.section}>
-            <SectionTitle styles={styles}>Courses and Certificates</SectionTitle>
+            <SectionTitle styles={styles}>{sc.courses.label}</SectionTitle>
             {resume.courses.map((c, i) => (
               <View key={i} style={styles.entry}>
                 <Text>

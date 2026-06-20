@@ -1,175 +1,139 @@
-# ResumeTailor — ATS-Friendly Resume Builder
+# ResumeTailor
 
-Tailor your resume to each job description (JD) by editing **form fields** instead of a Word
-document, then download a clean **single-page PDF** (with a filename you type) that ATS systems
-can actually read. Includes a **JD Assistant** that checks keyword coverage for free and can
-optionally draft improved content using your own free AI key.
+**A browser-based resume builder that tailors your resume to each job description in minutes.**
 
-> Built with React + Vite + TypeScript. Runs entirely in your browser — no server required, free
-> to run and free to host. See [PLAN.md](PLAN.md) for the design.
+Edit resume sections as form fields, see a live PDF preview, analyse ATS keyword coverage, and download a clean single-page PDF with real selectable text — all running entirely in your browser, no account or backend required.
 
 ---
 
-## Why this exists
+## Features
 
-Windows/Word editing per company is slow, and ATS filters mostly match **keywords**. ResumeTailor
-keeps your 7 sections — **Header, Professional Summary, Experience, Projects, Skills, Education,
-Courses** — as editable fields, renders a pixel-consistent PDF using **Carlito** (a free font
-identical to Calibri), and shows you exactly which JD keywords you're missing.
-
-It comes **pre-loaded with your real resume** (master) plus a **"Wells Fargo (example)"** version
-so you can see how tailoring works immediately.
+- **Live WYSIWYG PDF preview** — every edit reflects instantly in the preview pane
+- **ATS-friendly PDF** — real selectable text (not an image), so applicant tracking systems can parse it
+- **JD Assistant** — paste a job description to see your ATS keyword match %, missing keywords, and a ready-made prompt for ChatGPT / Claude
+- **Optional AI generation** — use your own free Gemini or Groq API key to draft improved summaries, bullets, and skills; review each suggestion before applying
+- **Multi-profession templates** — presets for Software/Tech, Marketing & Sales, Design & Creative, and General; each adjusts which sections appear and what they're called
+- **Section customization** — rename any section heading and toggle sections on or off to match your field
+- **Per-company version management** — save a named snapshot per company, duplicate, rename, delete, or switch back to your master resume
+- **Export / Import** — back up all your data as a JSON file and restore it on any device
+- **No backend, no account** — everything is stored in your browser's localStorage; nothing is uploaded unless you opt into the AI feature
 
 ---
 
-## 1. Requirements
+## Tech Stack
 
-- **Node.js 18+** (you have v24). Check: `node --version`
+| Layer | Technology |
+|---|---|
+| Framework | React 19 + Vite + TypeScript |
+| PDF generation | `@react-pdf/renderer` (real-text PDF, WYSIWYG) |
+| Font | Carlito (metric-identical to Calibri, embedded in PDF) |
+| State management | Zustand + localStorage persistence |
+| AI integration | Google Gemini API / Groq API (optional, user-supplied key) |
+| Deployment | Static site — Netlify, Vercel, or GitHub Pages |
 
-## 2. Install & run
+---
+
+## Getting Started
+
+### Run locally
 
 ```bash
-cd d:\ProjectsRecent\ResumeTailor
-npm install        # already done once
-npm run dev        # start the app
+npm install
+npm run dev       # starts at http://localhost:5173
 ```
 
-Open the URL it prints (usually <http://localhost:5173>).
-
-To create an optimized production build:
+### Production build
 
 ```bash
-npm run build      # output goes to dist/
-npm run preview    # preview the production build locally
+npm run build     # output goes to dist/
+npm run preview   # preview the build locally
 ```
+
+### Deploy for free
+
+Upload the `dist/` folder to **Netlify**, **Vercel**, or **GitHub Pages** — drag-and-drop works on Netlify. The AI calls run from each visitor's browser using their own key; no server cost.
 
 ---
 
-## How to use
+## How to Use
 
-### Edit your resume
-- Use the **Edit resume** tab. Every field updates the **live PDF preview** on the right.
-- Add / remove / reorder bullets, roles, projects, skills, etc. with the **+** and **↑ ↓ ✕** buttons.
+### 1. Fill in your resume
+Open the **Edit resume** tab. Every field updates the live PDF preview on the right. Add, remove, and reorder bullets, roles, projects, and skills with the **+** and **↑ ↓ ✕** controls.
+
+### 2. Choose a template
+Go to **Settings → Resume template** and pick the preset that fits your profession. You can further rename section headings or toggle sections off in the **Sections** panel below the template picker.
+
+### 3. Tailor to a job description
+Open the **JD Assistant** tab, paste the job description, and review:
+- **ATS match %** — how well your current resume covers the JD's keywords
+- **Missing keywords** — terms to weave in truthfully
+- **Copy prompt** — a ready-made prompt to paste into ChatGPT or Claude
+- **Generate** — optional AI-drafted improvements using your free Gemini or Groq key
+
+### 4. Save a version and download
+Click **Save as…**, name it after the company, tweak the content, then type a filename in the preview toolbar and click **Download PDF**.
 
 ### Keep it to one page
-- The preview tells you **"✓ Fits on one page"** or **"⚠ 2 pages"**.
-- If it spills over, trim content or open **Settings → Font scale** and nudge it down (or click
-  **Shrink a bit**).
-
-### Download the PDF
-- In the preview toolbar, type your **filename** and click **Download PDF**.
-- The PDF has **real, selectable text** (not an image), so ATS can parse it.
-
-### Save a version per company
-Use the **Version** dropdown and buttons in the top bar:
-- **Save as…** — snapshot the current resume under a company name.
-- **Duplicate / Rename / Delete** — manage versions.
-- **★ Master** — your base resume.
-- **Export / Import** — download or restore everything as a `.json` backup file.
-
-Everything is saved automatically in your browser (localStorage).
-
-### JD Assistant (tailor to a job)
-Open the **JD Assistant** tab and paste the job description:
-
-1. **Keyword check (free, always on, nothing leaves your browser):** see your **ATS match %**,
-   the keywords you already cover, and the **missing** ones to weave in (truthfully).
-2. **Copy prompt (free):** click **Copy prompt for ChatGPT/Claude** to get a ready-made prompt
-   bundling your resume + the JD — paste it into your usual chat and copy the result back.
-3. **Generate with AI (optional, your free key):** click **Generate** to have the app draft an
-   improved summary, experience bullets, project bullets, and skills. Review each block and click
-   **Apply** to insert it into the form (and preview).
+The preview shows **"✓ Fits on one page"** or **"⚠ 2 pages"**. Use **Settings → Font scale** to nudge everything down, or click **Shrink a bit**.
 
 ---
 
-## Using the optional AI (free)
+## Optional AI Setup (free)
 
-You need a **free API key** from one provider. Add it under **Settings → AI provider**.
+Add a key under **Settings → AI provider**. Your key is stored only in your browser.
 
-### Option A — Google Gemini (recommended; works directly in the browser)
-1. Go to <https://aistudio.google.com/apikey> and create a free API key.
-2. In **Settings**, choose **Google Gemini**, paste the key. (Default model: `gemini-2.0-flash`.)
+| Provider | Where to get a free key | Default model |
+|---|---|---|
+| Google Gemini (recommended) | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | `gemini-2.5-flash` |
+| Groq | [console.groq.com/keys](https://console.groq.com/keys) | `llama-3.3-70b-versatile` |
 
-### Option B — Groq (also free, very fast)
-1. Go to <https://console.groq.com/keys> and create a free API key.
-2. In **Settings**, choose **Groq**, paste the key. (Default model: `llama-3.3-70b-versatile`.)
+> **Privacy:** the AI option sends your resume + the JD to the provider you choose, using *your* key. The keyword analyzer and PDF generation are 100% local.
 
-> **Privacy:** the AI option sends your resume + the JD to the provider you pick, using *your* key.
-> The keyword analyzer and the PDF never leave your browser. Your key is stored only in your
-> browser's localStorage.
-
-### If a provider blocks browser calls (CORS)
-Some providers (often Groq) reject direct browser requests. Run the tiny included proxy:
+If a provider blocks browser requests (CORS), run the included proxy:
 
 ```bash
-cd server
-npm install
-npm start            # listens on http://localhost:8787
+cd server && npm install && npm start   # listens on http://localhost:8787
 ```
 
-Then in **Settings → Proxy URL**, enter `http://localhost:8787`. (You can also set
-`GEMINI_API_KEY` / `GROQ_API_KEY` as environment variables for the server and leave the key blank
-in the app.)
+Then set **Settings → Proxy URL** to `http://localhost:8787`.
 
 ---
 
-## Matching your old resume's look
+## Project Structure
 
-The PDF uses **Carlito**, which is metrically identical to **Calibri**, so it matches a Word/Calibri
-resume closely. Exact pixel-matching to your original isn't guaranteed (we don't have its source
-file), but it's very close. To fine-tune sizes, spacing, and colors, edit
-[`src/pdf/theme.ts`](src/pdf/theme.ts). Page size (A4 / US Letter) is in **Settings**.
-
----
-
-## Deploy for free (optional)
-
-Because it's a static site, you can host it free:
-
-```bash
-npm run build        # produces dist/
 ```
-
-Upload `dist/` to **Netlify**, **Vercel**, or **GitHub Pages** (drag-and-drop works on Netlify).
-The AI calls still run from the visitor's browser with their own key.
+ResumeTailor/
+  public/fonts/           # Carlito TTFs — embedded into every downloaded PDF
+  src/
+    types.ts              # core data model (Resume, Settings, SectionConfig, …)
+    data/
+      seed.ts             # sample master resume + example tailored version
+      templates.ts        # 4 profession template presets
+    store/                # Zustand state + localStorage persistence
+    pdf/                  # ResumeDocument (react-pdf), theme, fonts, icons
+    editor/               # 7-section form editor
+    jd/                   # keyword analyzer, prompt builder, Gemini/Groq client
+    versions/             # version switcher + export/import
+    preview/              # live PDF preview + filename input + download button
+    Settings.tsx          # template picker, section toggles, page size, AI keys
+    App.tsx               # tab layout
+  server/                 # optional Node/Express proxy (only needed if CORS blocks AI calls)
+```
 
 ---
 
 ## Troubleshooting
 
 | Problem | Fix |
-| ------- | --- |
-| Preview is blank / fonts look wrong | Hard-refresh the page; ensure `public/fonts/Carlito-*.ttf` exist. |
-| "Add your free API key in Settings first" | Paste a Gemini or Groq key under Settings. |
-| AI fails with a network/CORS error | Switch to Gemini, or run the `server/` proxy and set the Proxy URL. |
-| Resume spills to 2 pages | Trim bullets or lower **Font scale** in Settings. |
-| Want to start over | Settings → **Reset everything to defaults** (re-seeds your resume + example version). |
+|---|---|
+| Preview is blank / fonts look wrong | Hard-refresh; ensure `public/fonts/Carlito-*.ttf` exist |
+| "Add your free API key in Settings first" | Paste a Gemini or Groq key under Settings → AI provider |
+| AI fails with a network/CORS error | Switch to Gemini, or run the `server/` proxy and set the Proxy URL |
+| Resume spills to 2 pages | Trim bullets or lower **Font scale** in Settings |
+| Want to start fresh | Settings → **Reset everything to defaults** |
 
 ---
 
-## Project structure
+## License
 
-```
-ResumeTailor/
-  PLAN.md                 # design document
-  README.md               # this file
-  public/fonts/           # Carlito TTFs (embedded into the PDF)
-  src/
-    types.ts              # resume data model
-    data/seed.ts          # your real resume (master) + Wells Fargo example
-    store/                # zustand state + localStorage persistence
-    pdf/                  # ResumeDocument, theme, fonts, icons (the PDF)
-    editor/               # the 7-section form editor
-    jd/                   # keyword analyzer + prompt builder + Gemini/Groq client
-    versions/             # version switcher + export/import
-    preview/              # live PDF preview + filename + download
-    Settings.tsx          # page size, font scale, AI keys
-    App.tsx               # layout
-  server/                 # OPTIONAL Node proxy for AI (only if CORS blocks the browser)
-```
-
-## Notes & scope (v1)
-
-- One faithful single-page template (no multi-template switching yet).
-- Data is local; use **Export/Import** for backup or to move between machines.
-- AI suggestions always require your **review + Apply** — nothing is changed automatically.
+MIT — free to use, fork, and deploy.

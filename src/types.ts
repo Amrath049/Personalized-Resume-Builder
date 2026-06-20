@@ -6,8 +6,8 @@ export interface Header {
   location: string;
   email: string;
   phone: string;
-  linkedin: string; // e.g. "linkedin.com/in/amrath-prasad-99234a209"
-  github: string; // e.g. "github.com/Amrath049"
+  linkedin: string; // e.g. "linkedin.com/in/alex-morgan"
+  github: string; // e.g. "github.com/alexmorgan"
 }
 
 export interface ExperienceItem {
@@ -52,6 +52,13 @@ export interface Resume {
 
 export type AiProvider = 'gemini' | 'groq';
 export type PageSize = 'A4' | 'LETTER';
+export type SectionId = 'summary' | 'experience' | 'projects' | 'skills' | 'education' | 'courses';
+
+export interface SectionConfig {
+  enabled: boolean;
+  label: string;      // section heading in PDF and editor card title
+  sublabel?: string;  // label for the techStack line in Projects; empty/absent = hide that field
+}
 
 export interface Settings {
   pageSize: PageSize;
@@ -62,6 +69,8 @@ export interface Settings {
   groqKey: string;
   groqModel: string;
   proxyUrl: string; // optional Node proxy base URL (used if a provider blocks browser calls)
+  templateId: string;
+  sectionOverrides: Record<SectionId, SectionConfig>;
 }
 
 export interface SavedVersion {

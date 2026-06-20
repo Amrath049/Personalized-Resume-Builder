@@ -153,3 +153,23 @@ button { font-family: inherit; cursor: pointer; }
 /* settings */
 .settings .card-body p.muted { margin-top: 0; font-size: 12px; }
 input[type='range'] { width: 100%; }
+
+/* template picker */
+.template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.template-card {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 10px 12px;
+  border: 2px solid var(--border); border-radius: 8px;
+  background: var(--bg); cursor: pointer; text-align: left;
+  transition: border-color 0.15s;
+}
+.template-card:hover { border-color: var(--primary); }
+.template-card--active { border-color: var(--primary); background: #eef3fd; }
+.template-card strong { font-size: 0.88rem; color: var(--text); }
+.template-card span { color: var(--muted); font-size: 0.75rem; line-height: 1.3; }
+
+/* section toggles */
+.section-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.section-row input[type='checkbox'] { flex-shrink: 0; width: 15px; height: 15px; cursor: pointer; accent-color: var(--primary); }
+.section-row .text-input { flex: 1; min-width: 0; }
+.section-row .text-input.sublabel { flex: 0 0 140px; }

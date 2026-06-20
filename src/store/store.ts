@@ -3,13 +3,14 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { PersistedState, Resume, SavedVersion, Settings } from '../types';
+import type { PersistedState, Resume, SavedVersion, Settings, SectionId, SectionConfig } from '../types';
 import {
   DEFAULT_FILENAME,
   DEFAULT_SETTINGS,
   MASTER_RESUME,
   SEED_VERSIONS,
 } from '../data/seed';
+import { TEMPLATES, DEFAULT_SECTION_CONFIG } from '../data/templates';
 
 function uid(): string {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
@@ -32,6 +33,8 @@ interface StoreActions {
 
   setFilename: (name: string) => void;
   setSettings: (patch: Partial<Settings>) => void;
+  applyTemplate: (id: string) => void;
+  setSectionConfig: (key: SectionId, patch: Partial<SectionConfig>) => void;
 
   exportData: () => PersistedState;
   importData: (data: PersistedState) => void;
@@ -124,6 +127,24 @@ export const useStore = create<Store>()(
 
       setSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
 
+      applyTemplate: (id) =>
+        set((s) => {
+          const preset = TEMPLATES.find((t) => t.id === id);
+          if (!preset) return {};
+          return { settings: { ...s.settings, templateId: id, sectionOverrides: preset.sections } };
+        }),
+
+      setSectionConfig: (key, patch) =>
+        set((s) => ({
+          settings: {
+            ...s.settings,
+            sectionOverrides: {
+              ...s.settings.sectionOverrides,
+              [key]: { ...s.settings.sectionOverrides[key], ...patch },
+            },
+          },
+        })),
+
       exportData: () => {
         const s = get();
         return {
@@ -140,7 +161,14 @@ export const useStore = create<Store>()(
           master: data.master ?? MASTER_RESUME,
           versions: data.versions ?? [],
           editingId: data.editingId ?? null,
-          settings: { ...DEFAULT_SETTINGS, ...(data.settings ?? {}) },
+          settings: {
+            ...DEFAULT_SETTINGS,
+            ...(data.settings ?? {}),
+            sectionOverrides: {
+              ...DEFAULT_SECTION_CONFIG,
+              ...(data.settings?.sectionOverrides ?? {}),
+            },
+          },
           filename: data.filename ?? DEFAULT_FILENAME,
         })),
 
@@ -155,6 +183,14 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'resumetailor-store',
+      version: 1,
+      migrate: (persisted: unknown) => {
+        const p = persisted as { settings?: Partial<Settings> };
+        if (!p.settings?.sectionOverrides) {
+          p.settings = { ...p.settings, templateId: 'tech', sectionOverrides: DEFAULT_SECTION_CONFIG };
+        }
+        return p;
+      },
       partialize: (s) => ({
         master: s.master,
         versions: s.versions,
