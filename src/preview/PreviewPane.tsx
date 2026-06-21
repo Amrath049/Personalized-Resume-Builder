@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { useStore } from '../store/store';
 import { useCurrentResume } from '../store/hooks';
 import { ResumeDocument } from '../pdf/ResumeDocument';
+import { ResumeHtmlPreview } from './ResumeHtmlPreview';
 
 function countPages(buf: ArrayBuffer): number {
   // pdfkit (used by react-pdf) writes uncompressed page dictionaries, so we can
@@ -112,6 +113,12 @@ export function PreviewPane() {
         ) : (
           <div className="preview-empty">Loading preview…</div>
         )}
+      </div>
+
+      <div className="preview-mobile-msg">
+        <div className="preview-mobile-paper">
+          <ResumeHtmlPreview resume={resume} settings={settings} />
+        </div>
       </div>
     </div>
   );
