@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { useStore } from '../store/store';
 import { useCurrentResume } from '../store/hooks';
 import { ResumeDocument } from '../pdf/ResumeDocument';
+import { ResumeHtmlPreview } from './ResumeHtmlPreview';
 
 function countPages(buf: ArrayBuffer): number {
   // pdfkit (used by react-pdf) writes uncompressed page dictionaries, so we can
@@ -106,12 +107,20 @@ export function PreviewPane() {
         )}
       </div>
 
+      {/* Desktop: live PDF iframe */}
       <div className="preview-frame">
         {url ? (
           <iframe title="Resume preview" src={`${url}#view=FitH&toolbar=0`} />
         ) : (
           <div className="preview-empty">Loading preview…</div>
         )}
+      </div>
+
+      {/* Mobile: iframe doesn't render in mobile browsers — show HTML preview instead */}
+      <div className="preview-mobile-msg">
+        <div className="preview-mobile-paper">
+          <ResumeHtmlPreview resume={resume} settings={settings} />
+        </div>
       </div>
     </div>
   );
